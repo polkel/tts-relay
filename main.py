@@ -40,6 +40,12 @@ def main():
     print(result.returncode)
     result = subprocess.run(["paplay", voice_file], capture_output=True, text=True)
     print(result.returncode)
+    result = subprocess.run(["pulseaudio", "-k"], capture_output=True, text=True)
+    print(result.returncode)
+    result = subprocess.run(
+        ["bluetoothctl", "power", "off"], capture_output=True, text=True
+    )
+    print(result.returncode)
 
 
 main()
