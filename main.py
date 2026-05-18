@@ -2,6 +2,7 @@ from util.generate_voice import create_speech
 import sys
 import os
 import subprocess
+import time
 from dotenv import load_dotenv
 
 
@@ -32,8 +33,9 @@ def main():
         ["bluetoothctl", "connect", speaker_mac], capture_output=True, text=True
     )
     print(result.returncode)
+    time.sleep(1)
     result = subprocess.run(
-        ["pulseaudio", "set-sink-volume", "@DEFAULT_SINK@", "100%"],
+        ["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"],
         capture_output=True,
         text=True,
     )
@@ -46,6 +48,7 @@ def main():
         ["bluetoothctl", "power", "off"], capture_output=True, text=True
     )
     print(result.returncode)
+    os.remove(voice_file)
 
 
 main()
