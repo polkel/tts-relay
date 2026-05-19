@@ -27,6 +27,6 @@ async def hello_world() -> dict[str, str]:
 
 
 @app.post("/speech", status_code=status.HTTP_204_NO_CONTENT)
-async def queue_speech(req: SpeechReq):
+def queue_speech(req: SpeechReq):
     speaker.queue_speech(req.speech)
     return None
