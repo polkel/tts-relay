@@ -32,25 +32,27 @@ body {
 }
 
 .submit-button {
-  /* Remove default styling */
   appearance: none;
   border: none;
   outline: none;
   cursor: pointer;
 
-  /* Custom design */
   background-color: #222222;
   color: white;
   padding: 6px 18px;
   font-weight: 600;
   border-radius: 8px;
   
-  /* Smooth transitions */
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .submit-button:hover {
     background-color: #555555;
+}
+
+.success-message {
+    color: #22aa22;
+    font-size: small;
 }
 
 .error-message {

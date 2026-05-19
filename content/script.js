@@ -4,6 +4,11 @@ const loginInput = document.getElementById("password")
 const loginButton = document.getElementById("loginSubmit")
 const errorMessage = document.getElementById("loginError")
 const talkForm = document.getElementById("talkForm")
+const textarea = document.getElementById("speech")
+const speechError = document.getElementById("speechError")
+const speechSuccess = document.getElementById("speechSuccess")
+const talkButton = document.getElementById("talkButton")
+
 
 loginForm.addEventListener("submit", async (event) => {
     event.preventDefault()
@@ -38,6 +43,9 @@ loginForm.addEventListener("submit", async (event) => {
         return
     }
 
+    loginInput.disabled = false
+    loginInput.value = ""
+    loginButton.disabled = false
     loginForm.classList.add("hide")
     talkForm.classList.remove("hide")
 })
@@ -53,3 +61,72 @@ function setLoginError(message) {
     loginInput.disabled = false
     loginButton.disabled = false
 }
+
+function setSpeechError(message) {
+    speechError.innerText = message
+    speechError.classList.remove("hide")
+    textarea.disabled = false
+    talkButton.disabled = false
+}
+
+talkForm.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    textarea.disabled = true
+    talkButton.disabled = true
+    const speech = textarea.value.trim()
+
+    // Validate speech
+    if (speech === "") {
+        setSpeechError("say something to me")
+        return
+    }
+
+    const fetchURL = new URL("speech", appConfig.apiUrl)
+
+    try {
+        const res = await fetch(fetchURL, {
+            method: "POST",
+            body: JSON.stringify({ speech }),
+            headers: {
+                "Content-type": "application/json",
+                "x-voice-key": localStorage.getItem(appConfig.apiKeyStorage)
+            }
+        })
+        if (!res.ok) {
+            if (res.status === 401) {
+                // reset this form and go back to login screen
+                textarea.value = ""
+                textarea.disabled = false
+                talkButton.disabled = false
+                speechError.classList.add("hide")
+                speechSuccess.classList.add("hide")
+                talkForm.classList.add("hide")
+                loginForm.classList.remove("hide")
+                return
+            }
+            // Otherwise we just throw an error
+            setSpeechError("an unknown error occurred")
+            return
+        }
+    } catch (e) {
+        setSpeechError("an unknown error occurred")
+        return
+    }
+
+    // If everything is fine, we send a success message
+    speechError.innerText = ""
+    speechError.classList.add("hide")
+    textarea.value = ""
+    textarea.disabled = false
+    talkButton.disabled = false
+    speechSuccess.innerText = "i received your message"
+    speechSuccess.classList.remove("hide")
+
+})
+
+talkForm.addEventListener("focusout", (event) => {
+    speechError.innerText = ""
+    speechError.classList.add("hide")
+    speechSuccess.innerText = ""
+    speechSuccess.classList.add("hide")
+})
