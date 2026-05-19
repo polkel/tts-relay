@@ -39,7 +39,7 @@ class Speaker:
             (["pulseaudio", "--start"], False),
             (["bluetoothctl", "power", "on"], False),
             (["bluetoothctl", "connect", self.speaker_mac], True),
-            (["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"], False),
+            (["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"], True),
         ]
 
         for command, timer_pause in initial_commands:
@@ -82,4 +82,4 @@ class Speaker:
                 raise RuntimeError("Something went wrong with the speaker.")
 
         if pause:
-            await asyncio.sleep(1)
+            await asyncio.sleep(1.5)

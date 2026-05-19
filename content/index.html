@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TTS Relay</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <header>
+            <h1>Voice</h1>
+        </header>
+        <form id="loginForm" class="login-form">
+            <label for="password">password</label>
+            <input type="password" id="password" name="password" required>
+            <div id="loginError" class="error-message hide"></div>
+            <button id="loginSubmit" type="submit" class="submit-button">submit</button>
+        </form>
+        <form id="talkForm" class="talk-form hide">
+            <label for="speech">talk to me</label>
+            <textarea type="text" id="speech" name="speech" rows="4" cols="30" required></textarea>
+            <div id="speechError" class="error-message hide"></div>
+            <div id="speechSuccess" class="success-message hide"></div>
+            <button id="talkButton" type="submit" class="submit-button">talk</button>
+        </form>
+    
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
