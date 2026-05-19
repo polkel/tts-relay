@@ -1,6 +1,4 @@
 from collections import deque
-import time
-import subprocess
 from util.generate_voice import create_speech
 import os
 import asyncio
@@ -17,7 +15,7 @@ class Speaker:
     async def queue_speech(self, speech: str):
         self.speech_queue.appendleft(speech)
 
-        # Check if speech box is already running,
+        # Check if speech is already running,
         # If not we need to start it
         if not self.is_running:
             self.is_running = True
@@ -44,22 +42,26 @@ class Speaker:
 
         while len(self.speech_queue) != 0:
             speech = self.speech_queue.pop()
-            voice_file = create_speech(speech)
+            voice_file = await asyncio.to_thread(create_speech, speech)
             await self._run_subprocess(["paplay", voice_file], True)
 
-        os.remove(voice_file)
+        await asyncio.to_thread(os.remove, voice_file)
         await self._run_subprocess(["bluetoothctl", "power", "off"])
 
     async def _run_subprocess(
         self, commands: list[str], pause: bool = False, throw: bool = False
     ):
-        result = subprocess.run(commands, capture_output=True, text=True)
+        process = await asyncio.create_subprocess_exec(
+            *commands, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        )
 
-        if result.returncode != 0:
+        stdout, stderr = await process.communicate()
+
+        if process.returncode != 0:
             # Improve logging here
             print(f"Ran into an error with {' '.join(commands)}")
-            print(result.stdout)
-            print(result.stderr)
+            print(stdout.decode())
+            print(stderr.decode())
             if throw:
                 raise RuntimeError("Something went wrong with the speaker.")
 
