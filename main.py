@@ -22,13 +22,11 @@ def main():
     voice_file = create_speech(speech)
 
     commands: list[tuple[list[str], bool]] = [
-        (["pulseaudio", "-k"], False),
         (["pulseaudio", "--start"], False),
         (["bluetoothctl", "power", "on"], False),
         (["bluetoothctl", "connect", speaker_mac], True),
         (["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"], False),
         (["paplay", voice_file], False),
-        (["pulseaudio", "-k"], False),
         (["bluetoothctl", "power", "off"], False),
     ]
 
@@ -40,7 +38,7 @@ def main():
             print(result.stderr)
 
         if timer_pause:
-            time.sleep(3)
+            time.sleep(1)
 
     os.remove(voice_file)
 
