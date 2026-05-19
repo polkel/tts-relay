@@ -7,6 +7,7 @@ form.addEventListener("submit", (event) => {
     const data = Object.fromEntries(formData.entries())
     const speech = data["speech"]
     const fetchURL = new URL("speech", appConfig.apiUrl)
+    console.log(fetchURL.href)
 
     fetch(fetchURL, {method: "POST", 
         body: JSON.stringify({
