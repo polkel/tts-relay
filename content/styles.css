@@ -1,0 +1,59 @@
+body {
+    display: flex;
+    background-color: black;
+    color: white;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    font-family: "Poppins", sans-serif;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.talk-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.hide {
+    display: none;
+}
+
+.submit-button {
+  /* Remove default styling */
+  appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  /* Custom design */
+  background-color: #222222;
+  color: white;
+  padding: 6px 18px;
+  font-weight: 600;
+  border-radius: 8px;
+  
+  /* Smooth transitions */
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.submit-button:hover {
+    background-color: #555555;
+}
+
+.error-message {
+    color: #dd2222;
+    font-size: small;
+}
