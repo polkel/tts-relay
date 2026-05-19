@@ -2,6 +2,10 @@ from collections import deque
 from util.generate_voice import create_speech
 import os
 import asyncio
+from piper import PiperVoice
+from util.choose_voice import get_voices
+import math
+import random
 
 
 class Speaker:
@@ -11,6 +15,10 @@ class Speaker:
         self.speech_queue: deque[str] = deque()
         self.is_running: bool = False
         self.speaker_mac: str = speaker_mac
+        self.voice_models: list[PiperVoice] = []
+        voices = get_voices()
+        for voice in voices:
+            self.voice_models.append(PiperVoice.load(voice))
 
     async def queue_speech(self, speech: str):
         self.speech_queue.appendleft(speech)
@@ -21,9 +29,8 @@ class Speaker:
             self.is_running = True
             try:
                 await self.talk()
-            except:
-                # Improve error logging here
-                print("Something went wrong with the speech")
+            except Exception as e:
+                print(f"Something went wrong with speech: {e}")
             finally:
                 self.is_running = False
 
@@ -42,7 +49,16 @@ class Speaker:
 
         while len(self.speech_queue) != 0:
             speech = self.speech_queue.pop()
-            voice_file = await asyncio.to_thread(create_speech, speech)
+
+            # Randomly select a voice to use
+            if len(self.voice_models) == 0:
+                raise ValueError(
+                    "There must be at least one voice model in the directory."
+                )
+            voice_index = math.floor(random.random() * len(self.voice_models))
+            voice_file = await asyncio.to_thread(
+                create_speech, speech, self.voice_models[voice_index]
+            )
             await self._run_subprocess(["paplay", voice_file], True)
 
         await asyncio.to_thread(os.remove, voice_file)
