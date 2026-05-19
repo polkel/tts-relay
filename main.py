@@ -21,33 +21,27 @@ def main():
 
     voice_file = create_speech(speech)
 
-    result = subprocess.run(["pulseaudio", "-k"], capture_output=True, text=True)
-    print(result.returncode)
-    result = subprocess.run(["pulseaudio", "--start"], capture_output=True, text=True)
-    print(result.returncode)
-    result = subprocess.run(
-        ["bluetoothctl", "power", "on"], capture_output=True, text=True
-    )
-    print(result.returncode)
-    result = subprocess.run(
-        ["bluetoothctl", "connect", speaker_mac], capture_output=True, text=True
-    )
-    print(result.returncode)
-    time.sleep(1)
-    result = subprocess.run(
-        ["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"],
-        capture_output=True,
-        text=True,
-    )
-    print(result.returncode)
-    result = subprocess.run(["paplay", voice_file], capture_output=True, text=True)
-    print(result.returncode)
-    result = subprocess.run(["pulseaudio", "-k"], capture_output=True, text=True)
-    print(result.returncode)
-    result = subprocess.run(
-        ["bluetoothctl", "power", "off"], capture_output=True, text=True
-    )
-    print(result.returncode)
+    commands: list[tuple[list[str], bool]] = [
+        (["pulseaudio", "-k"], False),
+        (["pulseaudio", "--start"], False),
+        (["bluetoothctl", "power", "on"], False),
+        (["bluetoothctl", "connect", speaker_mac], True),
+        (["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"], False),
+        (["paplay", voice_file], False),
+        (["pulseaudio", "-k"], False),
+        (["bluetoothctl", "power", "off"], False),
+    ]
+
+    for command, timer_pause in commands:
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Ran into an error with {' '.join(command)}")
+            print(result.stdout)
+            print(result.stderr)
+
+        if timer_pause:
+            time.sleep(1)
+
     os.remove(voice_file)
 
 
