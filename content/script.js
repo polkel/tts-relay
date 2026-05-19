@@ -11,6 +11,9 @@ form.addEventListener("submit", (event) => {
     fetch(fetchURL, {method: "POST", 
         body: JSON.stringify({
             speech
-        })
+        }),
+        headers: {
+            "Content-type": "application/json"
+        }
     }).catch(e => console.log(e))
 })
