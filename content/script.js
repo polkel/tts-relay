@@ -14,9 +14,7 @@ loginForm.addEventListener("submit", async (event) => {
     event.preventDefault()
     loginInput.disabled = true
     loginButton.disabled = true
-    const formData = new FormData(event.target)
-    const data = Object.fromEntries(formData.entries())
-    const password = data["password"]
+    const password = loginInput.value
 
     const fetchURL = new URL("login", appConfig.apiUrl)
     try {
