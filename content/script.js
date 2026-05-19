@@ -1,20 +1,55 @@
 import { appConfig } from "./config.js"
-const form = document.querySelector("#loginForm")
+const loginForm = document.getElementById("loginForm")
+const loginInput = document.getElementById("password")
+const loginButton = document.getElementById("loginSubmit")
+const errorMessage = document.getElementById("loginError")
+const talkForm = document.getElementById("talkForm")
 
-form.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
     event.preventDefault()
+    loginInput.disabled = true
+    loginButton.disabled = true
     const formData = new FormData(event.target)
     const data = Object.fromEntries(formData.entries())
-    const speech = data["speech"]
-    const fetchURL = new URL("speech", appConfig.apiUrl)
-    console.log(fetchURL.href)
+    const password = data["password"]
 
-    fetch(fetchURL, {method: "POST", 
-        body: JSON.stringify({
-            speech
-        }),
-        headers: {
-            "Content-type": "application/json"
+    const fetchURL = new URL("login", appConfig.apiUrl)
+    try {
+        const res = await fetch(fetchURL, {
+            method: "POST", body: JSON.stringify({
+                password
+            }), headers: {
+                "Content-type": "application/json"
+            }
+        })
+        if (!res.ok) {
+            if (res.status === 401) {
+                setLoginError("incorrect password")
+                return
+            }
+            setLoginError("an unknown error occurred")
+            return
         }
-    }).catch(e => console.log(e))
+        // Should just return a string
+        const resBody = await res.json()
+        localStorage.setItem(appConfig.apiKeyStorage, resBody)
+    } catch (e) {
+        setLoginError("an unknown error occurred")
+        return
+    }
+
+    loginForm.classList.add("hide")
+    talkForm.classList.remove("hide")
 })
+
+loginForm.addEventListener("focusout", (event) => {
+    errorMessage.innerText = ""
+    errorMessage.classList.add("hide")
+})
+
+function setLoginError(message) {
+    errorMessage.innerText = message
+    errorMessage.classList.remove("hide")
+    loginInput.disabled = false
+    loginButton.disabled = false
+}

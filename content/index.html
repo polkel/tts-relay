@@ -11,10 +11,17 @@
         <header>
             <h1>Voice</h1>
         </header>
-        <form id="loginForm">
-            <label for="speech">talk</label>
-            <input type="text" id="speech" name="speech" required>
-            <button type="submit">Submit</button>
+        <form id="loginForm" class="login-form">
+            <label for="password">password</label>
+            <input type="password" id="password" name="password" required>
+            <div id="loginError" class="error-message hide"></div>
+            <button id="loginSubmit" type="submit" class="submit-button">submit</button>
+        </form>
+        <form id="talkForm" class="talk-form hide">
+            <label for="speech">talk to me</label>
+            <textarea type="text" id="speech" name="speech" rows="4" cols="30" required></textarea>
+            <div id="speechError" class="error-message hide"></div>
+            <button type="submit" class="submit-button">talk</button>
         </form>
     
         <script type="module" src="script.js"></script>
