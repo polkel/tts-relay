@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from util.speaker import Speaker
 from fastapi import FastAPI, status
 from pydantic import BaseModel
+import asyncio
 
 app = FastAPI()
 
@@ -27,6 +28,6 @@ async def hello_world() -> dict[str, str]:
 
 
 @app.post("/speech", status_code=status.HTTP_204_NO_CONTENT)
-def queue_speech(req: SpeechReq):
-    speaker.queue_speech(req.speech)
+async def queue_speech(req: SpeechReq):
+    asyncio.create_task(speaker.queue_speech(req.speech))
     return None

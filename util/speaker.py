@@ -13,7 +13,7 @@ class Speaker:
         self.is_running: bool = False
         self.speaker_mac: str = speaker_mac
 
-    def queue_speech(self, speech: str):
+    async def queue_speech(self, speech: str):
         self.speech_queue.appendleft(speech)
 
         # Check if speech box is already running,
@@ -33,7 +33,7 @@ class Speaker:
             (["pulseaudio", "--start"], False),
             (["bluetoothctl", "power", "on"], False),
             (["bluetoothctl", "connect", self.speaker_mac], True),
-            (["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"], True),
+            (["pactl", "set-sink-volume", "@DEFAULT_SINK@", "100%"], False),
         ]
 
         for command, timer_pause in initial_commands:
