@@ -40,7 +40,7 @@ def main():
             print(result.stderr)
 
         if timer_pause:
-            time.sleep(1)
+            time.sleep(3)
 
     os.remove(voice_file)
 
