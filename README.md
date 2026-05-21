@@ -89,6 +89,9 @@ Here are a few important considerations when deploying this app:
 - In `content/config.js`, you'll need to change `apiUrl` based on how you're going to deploy the app. If it's local, you'll need to point it to the local ip address, if it's public, then point it to the domain or ip address directly.
 - If you're deploying this publicly through your home router, you might want to create a proxy to your api with nginx so you don't expose a bunch of ports to the internet. You'll likely want to append `/api/` to your domain and then prefix the api route names with that on the fastapi app.
 
+### Other Considerations
+The voices in `voices/` are just a few samples of what is available. You can add or remove any that you want. The easiest way to do it is by downloading more from [here](https://huggingface.co/rhasspy/piper-voices/tree/main).
+
 ---
 
 That's it! This is my first public repo/app. It's kind of silly, but fun overall. Hope you have the same experience. [You can find more about me here!](https://polkel.dev)
